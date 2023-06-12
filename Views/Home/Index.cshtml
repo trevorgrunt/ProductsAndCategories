@@ -1,0 +1,77 @@
+﻿@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+
+@using ProductsAndCategories.Models
+@model IndexViewModel
+
+<style>
+    .glyphicon {
+        display: inline-block;
+        padding: 0 5px;
+    }
+
+    .glyphicon-chevron-right:after {
+        content: "\00BB";
+    }
+
+    .glyphicon-chevron-left:before {
+        content: "\00AB";
+    }
+</style>
+
+<h1>Join таблиц</h1>
+<form method="get">
+    <label>Продукт: </label>
+    <input name="name" value="@Model.FilterViewModel.SelectedName" />
+
+    <label>Категория: </label>
+    <select name="Category" asp-items="Model.FilterViewModel.Categories"></select>
+
+    <input type="submit" value="Фильтр" />
+</form>
+
+<table>
+    <tr>
+        <th>
+            <a asp-action="Index"
+               asp-route-sortOrder="@(Model.SortViewModel.NameSort)"
+               asp-route-name="@(Model.FilterViewModel.SelectedName)"
+               asp-route-category="@(Model.FilterViewModel.SelectedCategory)">Продукт</a>
+        </th>
+        <th>
+            <a asp-action="Index" asp-route-sortOrder="@(Model.SortViewModel.CategorySort)"
+               asp-route-name="@(Model.FilterViewModel.SelectedName)"
+               asp-route-category="@(Model.FilterViewModel.SelectedCategory)">Категория</a>
+        </th>
+    </tr>
+    @foreach (Product u in Model.Products)
+    {
+        <tr>
+            <td>@u.Name</td>
+            <td>@u.Category?.Name</td>
+        </tr>
+    }
+</table>
+<p>
+    @if (Model.PageViewModel.HasPreviousPage)
+    {
+        <a asp-action="Index"
+       asp-route-page="@(Model.PageViewModel.PageNumber - 1)"
+       asp-route-name="@(Model.FilterViewModel.SelectedName)"
+       asp-route-category="@(Model.FilterViewModel.SelectedCategory)"
+       asp-route-sortorder="@(Model.SortViewModel.Current)"
+           class="glyphicon glyphicon-chevron-left">
+            Назад
+        </a>
+    }
+    @if (Model.PageViewModel.HasNextPage)
+    {
+        <a asp-action="Index"
+       asp-route-page="@(Model.PageViewModel.PageNumber + 1)"
+       asp-route-name="@(Model.FilterViewModel.SelectedName)"
+       asp-route-category="@(Model.FilterViewModel.SelectedCategory)"
+       asp-route-sortorder="@(Model.SortViewModel.Current)"
+           class="glyphicon glyphicon-chevron-right">
+            Вперед
+        </a>
+    }
+</p>
